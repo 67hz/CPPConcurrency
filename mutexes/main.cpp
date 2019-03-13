@@ -11,8 +11,10 @@ std::mutex m;
 void add_to_list(int const &x)
 {
   // m.lock();
-  // RAII style auto lock/unlock
-  std::lock_guard<std::mutex> lg(m);
+  // RAII style auto lock/unlock - deprecated in C++17
+  // use scoped_lock or shared_lock ->
+  // std::lock_guard<std::mutex> lg(m);
+  std::scoped_lock<std::mutex> sl(m);
   std::this_thread::sleep_for(std::chrono::milliseconds(5000));
   my_list.push_front(x);
 
@@ -22,7 +24,8 @@ void add_to_list(int const &x)
 void size()
 {
   // m.lock();
-  std::lock_guard<std::mutex> lg(m);
+  // std::lock_guard<std::mutex> lg(m);
+  std::scoped_lock<std::mutex> sl(m);
   int size = my_list.size();
   // m.unlock();
   std::cout << "Size of list is: " << size << std::endl;
